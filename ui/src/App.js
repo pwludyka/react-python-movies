@@ -41,12 +41,25 @@ function App() {
         }
     }
 
+    async function handleEditMovie(movie) {
+        const response = await fetch(`/movies/${movie.id}`, {
+            method: 'PUT',
+            body: JSON.stringify(movie),
+            headers: { 'Content-Type': 'application/json' }
+        });
+        if (response.ok) {
+            setMovies([...movies, movie]);
+            setAddingMovie(false);
+        }
+    }
+
     return (
         <div className="container">
             <h1>My favourite movies to watch</h1>
             {movies.length === 0
                 ? <p>No movies yet. Maybe add something?</p>
                 : <MoviesList movies={movies}
+                              onEditMovie={handleEditMovie}
                               onDeleteMovie={handleDeleteMovie}
                 />}
             {addingMovie
