@@ -2,11 +2,14 @@ import './App.css';
 import {useState, useEffect} from "react";
 import "milligram";
 import MovieForm from "./MovieForm";
+import MovieEditForm from "./MovieEditForm";
 import MoviesList from "./MoviesList";
 
 function App() {
     const [movies, setMovies] = useState([]);
     const [addingMovie, setAddingMovie] = useState(false);
+    const [editingMovie, setEditingMovie] = useState(false);
+    const [movieToEdit, setMovieToEdit] = useState(null);
 
     useEffect(() => {
         const fetchMovies = async () => {
@@ -48,8 +51,9 @@ function App() {
             headers: { 'Content-Type': 'application/json' }
         });
         if (response.ok) {
-            setMovies([...movies, movie]);
-            setAddingMovie(false);
+            setMovies([...movies]);
+            setEditingMovie(false);
+            setMovieToEdit(null);
         }
     }
 
@@ -58,10 +62,25 @@ function App() {
             <h1>My favourite movies to watch</h1>
             {movies.length === 0
                 ? <p>No movies yet. Maybe add something?</p>
-                : <MoviesList movies={movies}
-                              onEditMovie={handleEditMovie}
-                              onDeleteMovie={handleDeleteMovie}
-                />}
+                : <MoviesList 
+                    movies={movies}
+                    onEditMovie={(movie) => {
+                        setMovieToEdit(movie);
+                        setEditingMovie(true);
+                        }
+                    }
+                    onDeleteMovie={handleDeleteMovie}
+                />
+            }
+            {editingMovie && (
+                <MovieEditForm 
+                    movie={movieToEdit}
+                    onMovieEdit={handleEditMovie}
+                    buttonLabel="Edit a movie"
+                /> 
+                )
+            }
+
             {addingMovie
                 ? <MovieForm onMovieSubmit={handleAddMovie}
                              buttonLabel="Add a movie"
