@@ -1,12 +1,22 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 export default function MovieEditForm(props) {
-    const [id, setId] = useState(props.movie.id);
-    const [title, setTitle] = useState(props.movie.title);
-    const [year, setYear] = useState(props.movie.year);
-    const [director, setDirector] = useState(props.movie.director);
-    const [actors, setActors] = useState(props.movie.actors);
-    const [description, setDescription] = useState(props.movie.description);
+    const [id, setId] = useState('');
+    const [title, setTitle] = useState('');
+    const [year, setYear] = useState('');
+    const [director, setDirector] = useState('');
+    const [actors, setActors] = useState('');
+    const [description, setDescription] = useState('');
+
+    useEffect(() => {
+        if (!props.movie) return;
+        setId(props.movie.id);
+        setTitle(props.movie.title ?? '');
+        setYear(props.movie.year ?? '');
+        setDirector(props.movie.director ?? '');
+        setActors(props.movie.actors ?? '');
+        setDescription(props.movie.description ?? '');
+    }, [props.movie]);
 
     function editMovie(event) {
         event.preventDefault();
@@ -14,9 +24,6 @@ export default function MovieEditForm(props) {
             return alert('Tytuł jest za krótki');
         }
         props.onMovieEdit({id, title, year, director, actors, description});
-        console.log(id)
-        console.log(title)
-        console.log(props.movie)
         setId('');
         setTitle('');
         setYear('');

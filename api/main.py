@@ -54,12 +54,11 @@ def add_movie(movie: Movie):
 
 @app.put("/movies/{movie_id}")
 def update_movie(movie_id:int, movie: Movie):
-    db = sqlite3.connect('movies.db')
-    cursor = db.cursor()
-    cursor.execute("UPDATE movies SET title = ?, year = ?, director = ?, actors = ?, description = ? WHERE id = ?", (movie.title, movie.year, movie.director, movie.actors, movie.description, movie.id))
-    db.commit()
-    if cursor.rowcount == 0:
-        return {"message": f"Movie with id = {movie_id} not found"}
+    with sqlite3.connect('movies.db') as db:
+        cursor = db.cursor()
+        cursor.execute("UPDATE movies SET title = ?, year = ?, director = ?, actors = ?, description = ? WHERE id = ?", (movie.title, movie.year, movie.director, movie.actors, movie.description, movie_id))
+        if cursor.rowcount == 0:
+            return {"message": f"Movie with id = {movie_id} not found"}
     return {"message": f"Movie with id = {cursor.lastrowid} updated successfully"}
 
 @app.delete("/movies/{movie_id}")

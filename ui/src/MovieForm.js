@@ -13,9 +13,6 @@ export default function MovieForm(props) {
             return alert('Tytuł jest za krótki');
         }
         props.onMovieSubmit({title, year, director, actors, description});
-        console.log(title)
-        console.log(year)
-        console.log(props)
         setTitle('');
         setYear('');
         setDirector('');

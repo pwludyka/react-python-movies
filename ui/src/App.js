@@ -29,6 +29,7 @@ function App() {
             headers: { 'Content-Type': 'application/json' }
         });
         if (response.ok) {
+            console.log('App.js - handleAddMovie - done')
             setMovies([...movies, movie]);
             setAddingMovie(false);
         }
@@ -51,9 +52,12 @@ function App() {
             headers: { 'Content-Type': 'application/json' }
         });
         if (response.ok) {
-            setMovies([...movies]);
+            setMovies(prev => prev.map(m => (m.id === movie.id ? { ...m, ...movie } : m)));
             setEditingMovie(false);
             setMovieToEdit(null);
+        } else {
+            const errText = await response.text();
+            console.error("Edit failed:", errText);
         }
     }
 
@@ -82,8 +86,9 @@ function App() {
             }
 
             {addingMovie
-                ? <MovieForm onMovieSubmit={handleAddMovie}
-                             buttonLabel="Add a movie"
+                ? <MovieForm 
+                    onMovieSubmit={handleAddMovie}
+                    buttonLabel="Add a movie"
                 />
                 : <button onClick={() => setAddingMovie(true)}>Add a movie</button>}
         </div>
