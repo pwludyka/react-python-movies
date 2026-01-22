@@ -23,7 +23,7 @@ export default function MovieEditForm(props) {
         if (title.length < 2) {
             return alert('Tytuł jest za krótki');
         }
-        props.onMovieEdit({id, title, year, director, actors, description});
+        props.onMovieEdit({id, title, year: String(year), director, actors, description});
         setId('');
         setTitle('');
         setYear('');

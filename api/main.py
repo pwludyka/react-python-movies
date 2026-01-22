@@ -1,17 +1,22 @@
 from fastapi import FastAPI, Body
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
-from pydantic import BaseModel
+from typing import Union
+from pydantic import BaseModel, field_validator
 from typing import Any
 import sqlite3
 
 
 class Movie(BaseModel):
     title: str
-    year: str
+    year: Union[str, int]
     director: str
     actors: str
     description: str
+
+    @field_validator("year", mode="before") #solving one side of the year format bug on render.com
+    def year_to_str(cls, v):
+        return str(v)
 
 app = FastAPI()
 
@@ -29,7 +34,7 @@ def get_movies():  # put application's code here
 
         output = []
         for movie in movies:
-            movie = {'id': movie[0], 'title': movie[1], 'year': movie[2], 'director': movie[3], 'actors': movie[4], 'description': movie[5]}
+            movie = {'id': movie[0], 'title': movie[1], 'year': str(movie[2]), 'director': movie[3], 'actors': movie[4], 'description': movie[5]}
             output.append(movie)
 
     return output
@@ -41,7 +46,7 @@ def get_single_movie(movie_id:int):  # put application's code here
         movie = cursor.execute(f"SELECT * FROM movies WHERE id={movie_id}").fetchone()
         if movie is None:
             return {'message': "Movie not found"}
-        return {'id': movie[0], 'title': movie[1], 'year': movie[2], 'director': movie[3], 'actors': movie[4], 'description': movie[5]}
+        return {'id': movie[0], 'title': movie[1], 'year': str(movie[2]), 'director': movie[3], 'actors': movie[4], 'description': movie[5]}
 
 @app.post("/movies")
 def add_movie(movie: Movie):
