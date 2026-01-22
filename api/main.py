@@ -23,34 +23,32 @@ def serve_react_app():
 
 @app.get('/movies')
 def get_movies():  # put application's code here
-    db = sqlite3.connect('movies.db')
-    cursor = db.cursor()
-    movies = cursor.execute('SELECT * FROM movies')
+    with sqlite3.connect('movies.db') as db:
+        cursor = db.cursor()
+        movies = cursor.execute('SELECT * FROM movies')
 
-    output = []
-    for movie in movies:
-         movie = {'id': movie[0], 'title': movie[1], 'year': movie[2], 'director': movie[3], 'actors': movie[4], 'description': movie[5]}
-         output.append(movie)
+        output = []
+        for movie in movies:
+            movie = {'id': movie[0], 'title': movie[1], 'year': movie[2], 'director': movie[3], 'actors': movie[4], 'description': movie[5]}
+            output.append(movie)
+
     return output
 
 @app.get('/movies/{movie_id}')
 def get_single_movie(movie_id:int):  # put application's code here
-    db = sqlite3.connect('movies.db')
-    cursor = db.cursor()
-    movie = cursor.execute(f"SELECT * FROM movies WHERE id={movie_id}").fetchone()
-    if movie is None:
-        return {'message': "Movie not found"}
-    return {'title': movie[1], 'year': movie[2], 'actors': movie[3]}
+    with sqlite3.connect('movies.db') as db:
+        cursor = db.cursor()
+        movie = cursor.execute(f"SELECT * FROM movies WHERE id={movie_id}").fetchone()
+        if movie is None:
+            return {'message': "Movie not found"}
+        return {'id': movie[0], 'title': movie[1], 'year': movie[2], 'director': movie[3], 'actors': movie[4], 'description': movie[5]}
 
 @app.post("/movies")
 def add_movie(movie: Movie):
-    db = sqlite3.connect('movies.db')
-    cursor = db.cursor()
-    cursor.execute(f"INSERT INTO movies (title, year, director, actors, description) VALUES ('{movie.title}', '{movie.year}', '{movie.director}', '{movie.actors}', '{movie.description}')")
-    db.commit()
-    return {"message": f"Movie with id = {cursor.lastrowid} added successfully", "id": cursor.lastrowid}
-    # movie = models.Movie.create(**movie.dict())
-    # return movie
+    with sqlite3.connect('movies.db') as db:
+        cursor = db.cursor()
+        cursor.execute(f"INSERT INTO movies (title, year, director, actors, description) VALUES ('{movie.title}', '{movie.year}', '{movie.director}', '{movie.actors}', '{movie.description}')")
+        return {"id": cursor.lastrowid, 'title': movie.title, 'year': movie.year, 'director': movie.director, 'actors': movie.actors, 'description': movie.description}
 
 @app.put("/movies/{movie_id}")
 def update_movie(movie_id:int, movie: Movie):
@@ -63,20 +61,18 @@ def update_movie(movie_id:int, movie: Movie):
 
 @app.delete("/movies/{movie_id}")
 def delete_movie(movie_id:int):
-    db = sqlite3.connect('movies.db')
-    cursor = db.cursor()
-    cursor.execute("DELETE FROM movies WHERE id = ?", (movie_id,))
-    db.commit()
-    if cursor.rowcount == 0:
-        return {"message": f"Movie with id = {movie_id} not found"}
+    with sqlite3.connect('movies.db') as db:
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM movies WHERE id = ?", (movie_id,))
+        if cursor.rowcount == 0:
+            return {"message": f"Movie with id = {movie_id} not found"}
     return {"message": f"Movie with id = {movie_id} deleted successfully"}
 
 @app.delete("/movies")
 def delete_movies(movie_id:int):
-    db = sqlite3.connect('movies.db')
-    cursor = db.cursor()
-    cursor.execute("DELETE FROM movies")
-    db.commit()
+    with sqlite3.connect('movies.db') as db:
+        cursor = db.cursor()
+        cursor.execute("DELETE FROM movies")
     return {"message": f"Deleted {cursor.rowcount} movies"}
 
 

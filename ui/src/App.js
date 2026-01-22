@@ -29,8 +29,8 @@ function App() {
             headers: { 'Content-Type': 'application/json' }
         });
         if (response.ok) {
-            console.log('App.js - handleAddMovie - done')
-            setMovies([...movies, movie]);
+            const addedMovie = await response.json();
+            setMovies(prev => [...prev, addedMovie]);
             setAddingMovie(false);
         }
     }

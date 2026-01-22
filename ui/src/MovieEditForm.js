@@ -12,7 +12,7 @@ export default function MovieEditForm(props) {
         if (!props.movie) return;
         setId(props.movie.id);
         setTitle(props.movie.title ?? '');
-        setYear(props.movie.year ?? '');
+        setYear(String(props.movie.year) ?? '');
         setDirector(props.movie.director ?? '');
         setActors(props.movie.actors ?? '');
         setDescription(props.movie.description ?? '');
