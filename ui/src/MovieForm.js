@@ -1,18 +1,34 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
-export default function MovieForm(props) {
+export default function MovieEditForm(props) {
+    const [id, setId] = useState('');
     const [title, setTitle] = useState('');
     const [year, setYear] = useState('');
     const [director, setDirector] = useState('');
     const [actors, setActors] = useState('');
     const [description, setDescription] = useState('');
 
-    function addMovie(event) {
+    useEffect(() => {
+        if (!props.movie) return;
+        setId(props.movie.id ?? '');
+        setTitle(props.movie.title ?? '');
+        setYear(String(props.movie.year) ?? '');
+        setDirector(props.movie.director ?? '');
+        setActors(props.movie.actors ?? '');
+        setDescription(props.movie.description ?? '');
+    }, [props.movie]);
+
+    function editMovie(event) {
         event.preventDefault();
         if (title.length < 2) {
             return alert('Tytuł jest za krótki');
         }
-        props.onMovieSubmit({title, year, director, actors, description});
+        
+        {(!props.movie)
+            ? props.onMovieSubmit({title, year: String(year), director, actors, description})
+            : props.onMovieSubmit({id, title, year: String(year), director, actors, description})};
+
+        setId('');
         setTitle('');
         setYear('');
         setDirector('');
@@ -20,8 +36,8 @@ export default function MovieForm(props) {
         setDescription('');
     }
 
-    return <form onSubmit={addMovie}>
-        <h2>Add movie</h2>
+    return <form onSubmit={editMovie}>
+        <h2>{props.buttonLabel}</h2>
         <div>
             <label>Tytuł</label>
             <input type="text" value={title} onChange={(event) => setTitle(event.target.value)}/>

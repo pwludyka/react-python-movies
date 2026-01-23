@@ -2,7 +2,7 @@ import './App.css';
 import {useState, useEffect} from "react";
 import "milligram";
 import MovieForm from "./MovieForm";
-import MovieEditForm from "./MovieEditForm";
+import MovieEditForm from "./MovieForm";
 import MoviesList from "./MoviesList";
 
 function App() {
@@ -77,9 +77,9 @@ function App() {
                 />
             }
             {editingMovie && (
-                <MovieEditForm 
+                <MovieForm 
                     movie={movieToEdit}
-                    onMovieEdit={handleEditMovie}
+                    onMovieSubmit={handleEditMovie}
                     buttonLabel="Edit a movie"
                 /> 
                 )
