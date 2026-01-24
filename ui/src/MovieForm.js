@@ -39,21 +39,27 @@ export default function MovieEditForm(props) {
     return <form onSubmit={editMovie}>
         <h2>{props.buttonLabel}</h2>
         <div>
-            <label>Tytuł</label>
+            <label>Title</label>
             <input type="text" value={title} onChange={(event) => setTitle(event.target.value)}/>
         </div>
+        {!props.movie && (
         <div>
             <label>Year</label>
             <input type="text" value={year} onChange={(event) => setYear(event.target.value)}/>
         </div>
+        )}
+        {!props.movie && (
         <div>
             <label>Director</label>
             <input type="text" value={director} onChange={(event) => setDirector(event.target.value)}/>
         </div>
+        )}
+        {!props.movie && (        
         <div>
             <label>Actors</label>
             <input type="text" value={actors} onChange={(event) => setActors(event.target.value)}/>
         </div>
+        )} 
         <div>
             <label>Description</label>
             <textarea value={description} onChange={(event) => setDescription(event.target.value)}/>
