@@ -70,26 +70,42 @@ function App() {
                     onEditMovie={(movie) => {
                         setMovieToEdit(movie);
                         setEditingMovie(true);
+                        setAddingMovie(false);
                         }
                     }
                     onDeleteMovie={handleDeleteMovie}
                 />
             }
             {editingMovie && (
+                <>
                 <MovieForm 
                     movie={movieToEdit}
                     onMovieSubmit={handleEditMovie}
                     buttonLabel="Edit a movie"
-                /> 
-                )
-            }
-
-            {addingMovie
-                ? <MovieForm 
-                    onMovieSubmit={handleAddMovie}
-                    buttonLabel="Add a movie"
                 />
-                : <button onClick={() => setAddingMovie(true)}>Add a movie</button>}
+                <button onClick={() =>{
+                    setEditingMovie(false);
+                    setMovieToEdit(null);
+                    setAddingMovie(false);
+                }}>
+                    Cancel Editing</button>
+                </>                
+            )}
+
+            {!editingMovie && (
+                <>
+                {addingMovie
+                    ? (<>
+                    <MovieForm 
+                        onMovieSubmit={handleAddMovie}
+                        buttonLabel="Add a movie"
+                    />
+                    <button onClick={() =>setAddingMovie(false)}>Cancel Adding</button>
+                    </>
+                    )
+                    : <button onClick={() => setAddingMovie(true)}>Add a movie</button>}
+                </>
+            )}
         </div>
     );
 }

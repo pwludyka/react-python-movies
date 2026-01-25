@@ -34,7 +34,7 @@ def get_movies():  # put application's code here
 
         output = []
         for movie in movies:
-            movie = {'id': movie[0], 'title': movie[1], 'year': str(movie[2]), 'director': movie[3], 'actors': movie[4], 'description': movie[5]}
+            movie = {'id': movie[0], 'title': movie[1], 'year': str(movie[2]), 'actors': movie[3], 'director': movie[4], 'description': movie[5]}
             output.append(movie)
 
     return output
@@ -46,7 +46,7 @@ def get_single_movie(movie_id:int):  # put application's code here
         movie = cursor.execute(f"SELECT * FROM movies WHERE id={movie_id}").fetchone()
         if movie is None:
             return {'message': "Movie not found"}
-        return {'id': movie[0], 'title': movie[1], 'year': str(movie[2]), 'director': movie[3], 'actors': movie[4], 'description': movie[5]}
+        return {'id': movie[0], 'title': movie[1], 'year': str(movie[2]), 'actors': movie[3], 'director': movie[4], 'description': movie[5]}
 
 @app.post("/movies")
 def add_movie(movie: Movie):
